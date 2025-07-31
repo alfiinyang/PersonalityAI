@@ -21,12 +21,15 @@ You can install `PersonalityAI` using pip.
 `PersonalityAI` is designed to be LLM-client agnostic. You will need to initialize your chosen LLM API client (e.g., OpenAI, Google Generative AI, Anthropic) and provide it when instantiating the `Person` and `Persona` classes.
 
 For example, using an OpenAI-compatible client:
-```# from openai import OpenAI
+```
+# from openai import OpenAI
 # client = OpenAI(api_key="YOUR_API_KEY") # Replace with your actual API key
-# model_name = "gpt-4" # Or "gpt-3.5-turbo", etc.```
+# model_name = "gpt-4" # Or "gpt-3.5-turbo", etc.
+```
 
 ## Example
 Here's a basic example demonstrating how to create a `Person` agent with multiple personas and interact with it:
+
 ```
 # Import necessary classes from your package
 import random
