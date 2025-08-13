@@ -1,37 +1,10 @@
-# PersonalityAI
-A Python package for creating and managing AI personalities composed of multiple personas, mediated by a referee persona.
+PersonalityAIA Python package for creating and managing AI personalities composed of multiple personas, mediated by a referee persona.This library aims to provide a flexible framework for building sophisticated AI agents that can leverage different "mindsets" or "roles" to generate more nuanced, coherent, and controlled responses. By allowing multiple personas to "think" in parallel and a "referee" to synthesize their outputs, PersonalityAI helps overcome common limitations of single-prompt LLM interactions, leading to richer and more reliable AI behavior.FeaturesComposite AI Agents: Create complex AI agents by combining multiple specialized Persona instances.Referee Mediation: Utilizes a dedicated 'Referee' persona to mediate and select the most appropriate response from other personas' outputs.Parallel Thinking: Personas can generate responses in parallel, simulating a diverse range of perspectives.Configurable Personas: Easily define and configure each persona's role, system prompt, temperature, and other LLM parameters.Conversation History Management: Built-in history tracking for ongoing dialogues with the composite Person agent.Thought Bubble for Analysis: Access internal thought processes (thoughtbubble) of personas for debugging and understanding AI behavior.Error Handling: Includes custom MissingAttributeError for essential persona configurations.InstallationYou can install PersonalityAI using pip.pip install personalityai
 
-This library aims to provide a flexible framework for building sophisticated AI agents that can leverage different "mindsets" or "roles" to generate more nuanced, coherent, and controlled responses. By allowing multiple personas to "think" in parallel and a "referee" to synthesize their outputs, PersonalityAI helps overcome common limitations of single-prompt LLM interactions, leading to richer and more reliable AI behavior.
-
-## Features
-- Composite AI Agents: Create complex AI agents by combining multiple specialized `Persona` instances.
-- Referee Mediation: Utilizes a dedicated 'Referee' persona to mediate and select the most appropriate response from other personas' outputs.
-- Parallel Thinking: Personas can generate responses in parallel, simulating a diverse range of perspectives.
-- Configurable Personas: Easily define and configure each persona's role, system prompt, temperature, and other LLM parameters.
-- Conversation History Management: Built-in history tracking for ongoing dialogues with the composite `Person` agent.
-- Thought Bubble for Analysis: Access internal thought processes (`thoughtbubble`) of personas for debugging and understanding AI behavior.
-- Error Handling: Includes custom `MissingAttributeError` for essential persona configurations.
-
-## Installation
-You can install `PersonalityAI` using pip.
-```pip install personalityai```
-
-## Usage
-### Setting up your LLM Client
-`PersonalityAI` is designed to be LLM-client agnostic. You will need to initialize your chosen LLM API client (e.g., OpenAI, Google Generative AI, Anthropic) and provide it when instantiating the `Person` and `Persona` classes.
-
-For example, using an OpenAI-compatible client:
-```
-# from openai import OpenAI
+UsageSetting up your LLM ClientPersonalityAI is designed to be LLM-client agnostic. You will need to initialize your chosen LLM API client (e.g., OpenAI, Google Generative AI, Anthropic) and provide it when instantiating the Person and Persona classes.For example, using an OpenAI-compatible client:# from openai import OpenAI
 # client = OpenAI(api_key="YOUR_API_KEY") # Replace with your actual API key
 # model_name = "gpt-4" # Or "gpt-3.5-turbo", etc.
-```
 
-## Example
-Here's a basic example demonstrating how to create a `Person` agent with multiple personas and interact with it:
-
-```
-# Import necessary classes from your package
+ExampleHere's a basic example demonstrating how to create a Person agent with multiple personas and interact with it:# Import necessary classes from your package
 import random
 from personalityai.Person import Person
 from personalityai.persona import Persona # Although Persona is imported by Person, explicit import is good for clarity if used directly.
@@ -101,4 +74,79 @@ print(f"Hello, I am {alex_person.name}. Let's chat!")
 print(f"My description: {alex_person.sys_prompt}")
 response = alex_person.answer("Hello, Alex!")
 print(response)
-```
+
+
+
+---
+
+## Experimental Utilities
+
+The `experiments/` directory contains utility functions designed to help you conduct experiments and analyze the behavior of your `Person` and `Persona` agents.
+
+### `response_collector`
+
+This function helps in collecting responses from individual personas (e.g., Angel, Devil) either by prompting a `Person` agent or by parsing its existing thought history.
+
+**Usage:**
+
+```python
+from personalityai.Person import Person
+from experiments.experiment_utils import response_collector
+
+# Assuming 'alex_person' is an initialized Person object as in the Usage example
+# And 'client' and 'model' are your LLM client and model
+
+# Example 1: Generate and collect responses for new prompts
+prompts = [
+    "What's the best way to approach a difficult conversation?",
+    "Should one always tell the truth, even if it hurts?"
+]
+individual_persona_responses = response_collector(
+    prompts=prompts,
+    person=alex_person,
+    persist=False # Clear history after collection
+)
+print("Individual Persona Responses (Angel, Devil):")
+for angel_res, devil_res in individual_persona_responses:
+    print(f"  Angel: {angel_res}")
+    print(f"  Devil: {devil_res}")
+
+# Example 2: Collect responses from an existing chat history
+# First, generate some history
+alex_person.clear_history() # Ensure a fresh start
+alex_person.answer("Tell me about balancing work and life.", cdisplay=True)
+alex_person.answer("What's your take on artificial general intelligence?", cdisplay=True)
+existing_thoughts = alex_person.thoughts()
+
+# Now, collect only anthropomorphic responses from the history
+anthro_responses_from_history = response_collector(
+    chat_history=existing_thoughts,
+    collect="anthro"
+)
+print("\nAnthropomorphic Responses from History:")
+for angel_res, devil_res in anthro_responses_from_history:
+    print(f"  Angel: {angel_res}")
+    print(f"  Devil: {devil_res}")
+
+# Collect user prompts from the history
+user_prompts_from_history = response_collector(
+    chat_history=existing_thoughts,
+    collect="user"
+)
+print("\nUser Prompts from History:")
+for prompt in user_prompts_from_history:
+    print(f"  - {prompt}")
+
+# Collect both user prompts and anthropomorphic responses
+user_anthro_from_history = response_collector(
+    chat_history=existing_thoughts,
+    collect=["user", "anthro"]
+)
+user_prompts, anthro_responses = user_anthro_from_history
+print("\nUser Prompts and Anthropomorphic Responses from History:")
+for i, prompt in enumerate(user_prompts):
+    print(f"  User: {prompt}")
+    print(f"  Angel: {anthro_responses[i][0]}")
+    print(f"  Devil: {anthro_responses[i][1]}")
+
+alex_person.clear_history() # Clear history for future experiments
