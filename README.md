@@ -1,13 +1,41 @@
-PersonalityAIA Python package for creating and managing AI personalities composed of multiple personas, mediated by a referee persona.This library aims to provide a flexible framework for building sophisticated AI agents that can leverage different "mindsets" or "roles" to generate more nuanced, coherent, and controlled responses. By allowing multiple personas to "think" in parallel and a "referee" to synthesize their outputs, PersonalityAI helps overcome common limitations of single-prompt LLM interactions, leading to richer and more reliable AI behavior.FeaturesComposite AI Agents: Create complex AI agents by combining multiple specialized Persona instances.Referee Mediation: Utilizes a dedicated 'Referee' persona to mediate and select the most appropriate response from other personas' outputs.Parallel Thinking: Personas can generate responses in parallel, simulating a diverse range of perspectives.Configurable Personas: Easily define and configure each persona's role, system prompt, temperature, and other LLM parameters.Conversation History Management: Built-in history tracking for ongoing dialogues with the composite Person agent.Thought Bubble for Analysis: Access internal thought processes (thoughtbubble) of personas for debugging and understanding AI behavior.Error Handling: Includes custom MissingAttributeError for essential persona configurations.InstallationYou can install PersonalityAI using pip.pip install personalityai
+# PersonalityAI
 
-UsageSetting up your LLM ClientPersonalityAI is designed to be LLM-client agnostic. You will need to initialize your chosen LLM API client (e.g., OpenAI, Google Generative AI, Anthropic) and provide it when instantiating the Person and Persona classes.For example, using an OpenAI-compatible client:# from openai import OpenAI
-# client = OpenAI(api_key="YOUR_API_KEY") # Replace with your actual API key
-# model_name = "gpt-4" # Or "gpt-3.5-turbo", etc.
+A Python package for creating and managing AI personalities composed of multiple personas, mediated by a referee persona.
 
-ExampleHere's a basic example demonstrating how to create a Person agent with multiple personas and interact with it:# Import necessary classes from your package
-import random
-from personalityai.Person import Person
-from personalityai.persona import Persona # Although Persona is imported by Person, explicit import is good for clarity if used directly.
+This library aims to provide a flexible framework for building sophisticated AI agents that can leverage different "mindsets" or "roles" to generate more nuanced, coherent, and controlled responses.
+
+By allowing multiple personas to "think" in parallel and a "referee" to synthesize their outputs, PersonalityAI helps overcome common limitations of single-prompt LLM interactions, leading to richer and more reliable AI behavior.
+
+## Features
+- **Composite AI Agents**: Create complex AI agents by combining multiple specialized Persona instances.
+- **Referee Mediation**: Utilizes a dedicated 'Referee' persona to mediate and select the most appropriate response from other personas' outputs.
+- **Parallel Thinking**: Personas can generate responses in parallel, simulating a diverse range of perspectives.
+- **Configurable Personas**: Easily define and configure each persona's role, system prompt, temperature, and other LLM parameters.
+- **Conversation History Management**: Built-in history tracking for ongoing dialogues with the composite Person agent.
+- **Thought Bubble for Analysis**: Access internal thought processes (thoughtbubble) of personas for debugging and understanding AI behavior.
+- **Error Handling**: Includes custom `MissingAttributeError` for essential persona configurations.
+- **Installation**: You can install PersonalityAI using pip `pip install personalityai`
+
+## Usage
+### Setting up your LLM Client
+PersonalityAI is designed to be LLM-client agnostic.
+
+You will need to initialize your chosen LLM API client (e.g., OpenAI, Google Generative AI, Anthropic) and provide it when instantiating the Person and Persona classes.
+
+For example, using an OpenAI-compatible client:
+
+```
+from openai import OpenAI
+client = OpenAI(api_key="YOUR_API_KEY") # Replace with your actual API key
+model_name = "gpt-4" # Or "gpt-3.5-turbo", etc.
+```
+
+### Example
+Here's a basic example demonstrating how to create a Person agent with multiple personas and interact with it:
+```
+# Import necessary classes from your package
+from personalityai import Person
+from personalityai import Persona # Although Persona is imported by Person, explicit import is good for clarity if used directly.
 
 
 # Define temperature settings (you can use any settings of choice for any persona)
@@ -28,7 +56,6 @@ persona1 = {'persona':'Angel',
             Use fitting emojis to represent emotions where necessary.""",
             'temperature': temp['Hi'],
             'seed': seed,
-            'repeat_penalty': 1.1,
             'client': client, # Explicitly pass client and model
             'model': model
             }
@@ -74,7 +101,7 @@ print(f"Hello, I am {alex_person.name}. Let's chat!")
 print(f"My description: {alex_person.sys_prompt}")
 response = alex_person.answer("Hello, Alex!")
 print(response)
-
+```
 
 
 ---
@@ -148,5 +175,6 @@ for i, prompt in enumerate(user_prompts):
     print(f"  User: {prompt}")
     print(f"  Angel: {anthro_responses[i][0]}")
     print(f"  Devil: {anthro_responses[i][1]}")
+
 
 alex_person.clear_history() # Clear history for future experiments
