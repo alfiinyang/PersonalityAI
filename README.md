@@ -189,3 +189,70 @@ for i, prompt in enumerate(user_prompts):
 ```
 alex_person.clear_history() # Clear history for future experiments
 ```
+
+
+### **`ref_response_collector`**
+This function helps in collecting referee responses at different temperatures.
+
+**Usage**
+```
+from experiments import ref_response_collector
+
+# Assuming Person already exists
+```
+
+#### Example 1: Generate referee responses at different temperatures
+- Define prompts and persona responses (choices)
+```
+prompts = [
+    "What's the best way to handle criticism?",
+    "Should I always tell the truth, even if it hurts?"
+]
+
+choices = [
+    ("Be kind and listen calmly.", "Ignore them, they don’t matter."), # Angel, Devil
+    ("Yes, honesty builds trust.", "No, sometimes lies are better.")
+]
+```
+
+- Define temperature levels for referee to iterate over
+```
+temp_levels = {
+    'low': 0.2,
+    'mid': 0.5,
+    'high': 0.9
+}
+```
+
+- Collect referee responses at multiple temperatures
+```
+ref_responses = ref_response_collector(
+    person=alex,
+    user_prompt=prompts,
+    choices=choices,
+    temp=temp_levels,
+    printout=True,
+    bypass=True # Use choices. Do not generate anthropomorphic response internally
+)
+
+print("\nCollected Referee Responses:")
+
+for lvl, responses in ref_responses.items():
+    print(f"\nTemperature: {lvl}")
+
+    for r in responses:
+        print(f"  - {r}")
+```
+
+#### Example 2: Extract referee responses from existing chat history
+```
+# Collect responses from chat history instead of regenerating
+
+chat_history = {alex.name: alex.thoughts()}
+ref_responses_from_history = ref_response_collector(chat_history=chat_history)
+
+print("\nReferee Responses from Chat History:")
+
+for r in ref_responses_from_history:
+    print(f"  - {r}")
+```
