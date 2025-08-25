@@ -34,8 +34,8 @@ model_name = "gpt-4" # Or "gpt-3.5-turbo", etc.
 Here's a basic example demonstrating how to create a Person agent with multiple personas and interact with it:
 ```
 # Import necessary classes from your package
-from personalityai import Person
-from personalityai import Persona # Although Persona is imported by Person, explicit import is good for clarity if used directly.
+from personality import Person
+from personality import Persona # Although Persona is imported by Person, explicit import is good for clarity if used directly.
 
 
 # Define temperature settings (you can use any settings of choice for any persona)
@@ -48,7 +48,7 @@ temp = {
 # Define a seed for reproducibility
 seed = random.random()
 
-### Define personas and referee
+### Define personas (a minimum of 2) and referee
 persona1 = {'persona':'Angel',
             'function': """You are the gentle persona of Alex.
             You tell Alex to give courteous and pleasant responses as replies.
@@ -56,8 +56,8 @@ persona1 = {'persona':'Angel',
             Use fitting emojis to represent emotions where necessary.""",
             'temperature': temp['Hi'],
             'seed': seed,
-            'client': client, # Explicitly pass client and model
-            'model': model
+            'client': client, # optional
+            'model': model # optional
             }
 
 persona2 = {'persona': 'Devil',
@@ -68,20 +68,17 @@ persona2 = {'persona': 'Devil',
             Use fitting emojis to represent emotions where necessary.""",
             'temperature': temp['Hi'],
             'seed': seed,
-            'repeat_penalty': 1.1,
-            'client': client, # Explicitly pass client and model
-            'model': model
+            'client': client, # optional
+            'model': # optional
             }
 
 referee = {'persona': 'Referee',
            'function': f"""You are the thought referee between the personas of Alex.
-
            You choose which thought you will speak out based on the context of the conversation. You have no preference.""",
            'temperature': temp['Mid'],
            'seed': seed,
-           'repeat_penalty': 1.1,
-           'client': client, # Explicitly pass client and model
-           'model': model
+           'client': client, # optional
+           'model': model # optional
            }
 
 personas = [persona1, persona2, referee]
@@ -94,11 +91,9 @@ You love playing video games, especially RPGs like Final Fantasy.
 You enjoy composing electronic music in your free time. Only speak English.
 You recently started learning about urban gardening and sustainable living."""
 
-alex_person = Person(name, description, personas, client, model)
+alex_person = Person(name=name, description=description, personas=personas, client=client, model=model) # only specifiy client and model if not already passed in persona dictionaries
 
 ### Usage
-print(f"Hello, I am {alex_person.name}. Let's chat!")
-print(f"My description: {alex_person.sys_prompt}")
 response = alex_person.answer("Hello, Alex!")
 print(response)
 ```
@@ -117,64 +112,80 @@ This function helps in collecting responses from individual personas (e.g., Ange
 **Usage:**
 
 ```python
-from personalityai.Person import Person
-from experiments.experiment_utils import response_collector
+from personality import Person
+from experiments import response_collector
 
 # Assuming 'alex_person' is an initialized Person object as in the Usage example
 # And 'client' and 'model' are your LLM client and model
-
-# Example 1: Generate and collect responses for new prompts
+```
+#### Example 1: Generate and collect responses for new prompts
+```
 prompts = [
     "What's the best way to approach a difficult conversation?",
     "Should one always tell the truth, even if it hurts?"
 ]
+
 individual_persona_responses = response_collector(
     prompts=prompts,
     person=alex_person,
     persist=False # Clear history after collection
 )
+
 print("Individual Persona Responses (Angel, Devil):")
+
 for angel_res, devil_res in individual_persona_responses:
     print(f"  Angel: {angel_res}")
     print(f"  Devil: {devil_res}")
+```
 
-# Example 2: Collect responses from an existing chat history
-# First, generate some history
-alex_person.clear_history() # Ensure a fresh start
-alex_person.answer("Tell me about balancing work and life.", cdisplay=True)
-alex_person.answer("What's your take on artificial general intelligence?", cdisplay=True)
+#### Example 2: Collect responses from an existing chat history
+```
+# Gather existing thoughts
 existing_thoughts = alex_person.thoughts()
-
-# Now, collect only anthropomorphic responses from the history
+```
+- Collect only anthropomorphic responses from the history
+```
 anthro_responses_from_history = response_collector(
     chat_history=existing_thoughts,
     collect="anthro"
 )
+
 print("\nAnthropomorphic Responses from History:")
+
 for angel_res, devil_res in anthro_responses_from_history:
     print(f"  Angel: {angel_res}")
     print(f"  Devil: {devil_res}")
+```
 
-# Collect user prompts from the history
+- Collect user prompts from the history
+```
 user_prompts_from_history = response_collector(
     chat_history=existing_thoughts,
     collect="user"
 )
+
 print("\nUser Prompts from History:")
 for prompt in user_prompts_from_history:
     print(f"  - {prompt}")
+```
 
-# Collect both user prompts and anthropomorphic responses
+- Collect both user prompts and anthropomorphic responses
+```
 user_anthro_from_history = response_collector(
     chat_history=existing_thoughts,
     collect=["user", "anthro"]
 )
+
 user_prompts, anthro_responses = user_anthro_from_history
+
 print("\nUser Prompts and Anthropomorphic Responses from History:")
+
 for i, prompt in enumerate(user_prompts):
     print(f"  User: {prompt}")
     print(f"  Angel: {anthro_responses[i][0]}")
     print(f"  Devil: {anthro_responses[i][1]}")
+```
 
-
+```
 alex_person.clear_history() # Clear history for future experiments
+```
