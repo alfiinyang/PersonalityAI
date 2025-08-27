@@ -6,6 +6,8 @@ This library aims to provide a flexible framework for building sophisticated AI 
 
 By allowing multiple personas to "think" in parallel and a "referee" to synthesize their outputs, PersonalityAI helps overcome common limitations of single-prompt LLM interactions, leading to richer and more reliable AI behavior.
 
+Here's my [**motivation statement**](https://blog.stackademic.com/i-gave-my-ai-a-personality-and-let-it-talk-back-ee897f7a30d9?gi=261fd9415f82).
+
 ## Features
 - **Composite AI Agents**: Create complex AI agents by combining multiple specialized Persona instances.
 - **Referee Mediation**: Utilizes a dedicated 'Referee' persona to mediate and select the most appropriate response from other personas' outputs.
@@ -17,7 +19,7 @@ By allowing multiple personas to "think" in parallel and a "referee" to synthesi
 - **Installation**: You can install PersonalityAI using pip `pip install personalityai`
 
 ## Usage
-(You can go straight to the [open notebook](https://colab.research.google.com/drive/1nk9YOWmYGQfceUvXJ6NgnQlAFPSXK4F8?usp=sharing) for a demo)
+(You can go straight to the [**open notebook**](https://colab.research.google.com/drive/1nk9YOWmYGQfceUvXJ6NgnQlAFPSXK4F8?usp=sharing) for a quick demo)
 
 ### Setting up your LLM Client
 PersonalityAI is designed to be LLM-client agnostic.
@@ -260,3 +262,4 @@ for r in ref_responses_from_history:
     print(f"  - {r}")
 
 ```
+
