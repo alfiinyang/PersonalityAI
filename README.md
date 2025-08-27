@@ -17,6 +17,8 @@ By allowing multiple personas to "think" in parallel and a "referee" to synthesi
 - **Installation**: You can install PersonalityAI using pip `pip install personalityai`
 
 ## Usage
+(You can go straight to the [open notebook](https://colab.research.google.com/drive/1nk9YOWmYGQfceUvXJ6NgnQlAFPSXK4F8?usp=sharing) for a demo)
+
 ### Setting up your LLM Client
 PersonalityAI is designed to be LLM-client agnostic.
 
@@ -98,6 +100,7 @@ response = alex_person.answer("Hello, Alex!")
 print(response)
 ```
 
+You can run this [open notebook](https://colab.research.google.com/drive/1nk9YOWmYGQfceUvXJ6NgnQlAFPSXK4F8?usp=sharing).
 
 ---
 
@@ -255,4 +258,5 @@ print("\nReferee Responses from Chat History:")
 
 for r in ref_responses_from_history:
     print(f"  - {r}")
+
 ```
