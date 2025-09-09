@@ -21,6 +21,9 @@ Here's my [**motivation statement**](https://blog.stackademic.com/i-gave-my-ai-a
 ## Usage
 (You can go straight to the [**open notebook**](https://colab.research.google.com/drive/1nk9YOWmYGQfceUvXJ6NgnQlAFPSXK4F8?usp=sharing) for a quick demo)
 
+#### Demo Video
+[![F4yNwlaYBoM](https://img.youtube.com/vi/F4yNwlaYBoM/0.jpg)](https://www.youtube.com/watch?v=F4yNwlaYBoM)
+
 ### Setting up your LLM Client
 PersonalityAI is designed to be LLM-client agnostic.
 
@@ -262,4 +265,5 @@ for r in ref_responses_from_history:
     print(f"  - {r}")
 
 ```
+
 
