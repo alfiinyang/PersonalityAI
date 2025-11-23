@@ -196,7 +196,8 @@ class Person(Persona):
             list: The list of responses from the personas.
         """
         personas_said = []
-        print('thinking...')
+        if cdisplay==True:
+			print('thinking...')
 
         for persona in self.personas:              # `persona` is a PersonaObject
           response = persona.respond(prompt, cdisplay = cdisplay)
@@ -318,3 +319,4 @@ class Person(Persona):
         # name = self.name
         # del self.__dict__
         # print(f"{name} has been deleted.")
+
